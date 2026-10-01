@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="index,follow" />
+    <title>Recurve 70 m Scorecard Checker: Totals, Xs &amp; Tie Rules</title>
+    <meta
+      name="description"
+      content="Check a World Archery Recurve 70 m ranking-round scorecard: 12 six-arrow ends, running totals, 10s, Xs and qualification tie context. Browser-only."
+    />
+    <link rel="canonical" href="https://trumpcoinofficial25-ship-it.github.io/recurve-scorecard/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Recurve 70 m Scorecard Checker: Totals, Xs &amp; Tie Rules" />
+    <meta property="og:description" content="Check 72-arrow Recurve 70 m scorecard totals, 10s, Xs and qualification tie context in your browser." />
+    <meta property="og:url" content="https://trumpcoinofficial25-ship-it.github.io/recurve-scorecard/" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Scorecheck home">Scorecheck <span>70</span></a>
+      <span class="private-badge">Browser-only · no account</span>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <p class="eyebrow">One round. One rule edition. No hidden assumptions.</p>
+        <h1>Check a Recurve 70 m ranking-round scorecard</h1>
+        <p class="lede">
+          Recalculate all 12 six-arrow ends, running totals, 10s and Xs. Compare two complete cards under the
+          World Archery rules effective 13 March 2026.
+        </p>
+        <div class="scope-strip">
+          <span>72 arrows</span><span>12 × 6</span><span>Max 720</span><span>X = 10 points</span><span>M = 0</span>
+        </div>
+      </section>
+
+      <section class="boundary" aria-labelledby="boundary-title">
+        <div>
+          <p class="eyebrow">Scope boundary</p>
+          <h2 id="boundary-title">Arithmetic aid, not an official result</h2>
+        </div>
+        <p>
+          This checks typed values only. It cannot judge an arrow, correct an official card, confirm signatures, perform
+          a shoot-off, or guarantee acceptance by an organizer. Local and event rules may differ.
+        </p>
+      </section>
+
+      <form id="scorecard-form" novalidate>
+        <div class="form-toolbar">
+          <div>
+            <p class="eyebrow">Input format</p>
+            <p>One end per line; six values in descending order. Allowed: X, 10–1, M. A numeric 0 is rejected.</p>
+          </div>
+          <div class="button-row">
+            <button id="load-example" class="button secondary" type="button">Load synthetic example</button>
+            <button id="clear-form" class="button ghost" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div class="scorecard-grid">
+          <fieldset>
+            <legend>Scorecard A</legend>
+            <label for="arrows-a">Arrow values</label>
+            <textarea
+              id="arrows-a"
+              rows="12"
+              maxlength="2048"
+              spellcheck="false"
+              placeholder="X 10 9 8 7 6&#10;10 10 9 8 7 M&#10;…12 non-empty lines total"
+              required
+            ></textarea>
+            <div class="declared-grid">
+              <label>Declared total<input id="declared-total-a" inputmode="numeric" maxlength="3" placeholder="optional" /></label>
+              <label>Declared 10s incl. X<input id="declared-tens-a" inputmode="numeric" maxlength="2" placeholder="optional" /></label>
+              <label>Declared Xs<input id="declared-xs-a" inputmode="numeric" maxlength="2" placeholder="optional" /></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Scorecard B</legend>
+            <label for="arrows-b">Arrow values</label>
+            <textarea
+              id="arrows-b"
+              rows="12"
+              maxlength="2048"
+              spellcheck="false"
+              placeholder="Enter a second complete card to compare"
+              required
+            ></textarea>
+            <div class="declared-grid">
+              <label>Declared total<input id="declared-total-b" inputmode="numeric" maxlength="3" placeholder="optional" /></label>
+              <label>Declared 10s incl. X<input id="declared-tens-b" inputmode="numeric" maxlength="2" placeholder="optional" /></label>
+              <label>Declared Xs<input id="declared-xs-b" inputmode="numeric" maxlength="2" placeholder="optional" /></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <section class="tie-panel">
+          <label for="tie-context">If totals tie, what does this comparison decide?</label>
+          <select id="tie-context">
+            <option value="">Choose a context — do not guess</option>
+            <option value="ordinary">Ordinary qualification ranking</option>
+            <option value="cutoff">Entrance to elimination / specified top-8 cutoff</option>
+          </select>
+          <p>
+            Ordinary long-distance ranking uses Xs first, then 10s. A cutoff tie in the rule’s stated cases requires an
+            official shoot-off; X/10 counts do not settle it.
+          </p>
+        </section>
+
+        <button class="button primary" type="submit">Verify both scorecards</button>
+      </form>
+
+      <section id="results" class="results" aria-live="polite" hidden></section>
+
+      <section class="rules" aria-labelledby="rules-title">
+        <p class="eyebrow">Pinned rule meaning</p>
+        <h2 id="rules-title">What this checker treats as known</h2>
+        <div class="rule-grid">
+          <article><strong>X</strong><p>Inner 10. It scores 10 points and is counted both among 10s and among Xs.</p></article>
+          <article><strong>10</strong><p>Scores 10 points. The displayed 10s count includes Xs, matching 10s+Xs scorecard usage.</p></article>
+          <article><strong>M</strong><p>Miss. It scores zero and must be written as M; this checker rejects a guessed “0” alias.</p></article>
+          <article><strong>Order</strong><p>Each end is entered from highest to lowest; X precedes a plain 10 for checking order.</p></article>
+        </div>
+      </section>
+
+      <section class="unknowns" aria-labelledby="unknowns-title">
+        <p class="eyebrow">Deliberate unknowns</p>
+        <h2 id="unknowns-title">What still belongs to judges and organizers</h2>
+        <ul>
+          <li>Whether a physical arrow is X, 10, another value, or M.</li>
+          <li>Corrections, signatures, duplicate-card precedence, sanctions, and official acceptance.</li>
+          <li>Shoot-off score, closest-to-centre measurement, and chart-position procedures.</li>
+          <li>Any local, national, para, age-class, match-play, compound, barebow, indoor, field, or 3D variant.</li>
+        </ul>
+      </section>
+
+      <section class="sources" aria-labelledby="sources-title">
+        <p class="eyebrow">Official sources checked 27 September 2026</p>
+        <h2 id="sources-title">Rules and format</h2>
+        <ol>
+          <li>
+            <a href="https://extranet.worldarchery.sport/documents/index.php/?doc=7626&amp;inline=1"
+              >World Archery Rulebook, Book 3: Target Archery, version 2026-03-13</a
+            > — Articles 10.1, 12.1.3, 12.2.8, 12.4, and 12.5.
+          </li>
+          <li>
+            <a href="https://extranet.worldarchery.sport/documents/index.php/?doc=7618&amp;inline=1"
+              >World Archery Rulebook, Book 2: Events, version 2026-03-13</a
+            > — 70 m Round arrow count and target scoring zones.
+          </li>
+          <li>
+            <a href="https://www.worldarchery.sport/news/200369/how-does-qualifying-work-archery-olympics"
+              >World Archery: How does qualifying work in archery at the Olympics?</a
+            > — 72 arrows as 12 ends of six, maximum 720.
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      <p>Browser-only scorecard checker. No analytics, form submission, storage, accounts, or organizer integration. Your typed values stay in this browser tab.</p>
+    </footer>
+    <script type="module" src="./app.mjs"></script>
+  </body>
+</html>
